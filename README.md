@@ -1,47 +1,21 @@
-# Custom React video app with Daily React
+# Daily React + local recording
 
-This repository is part of [a Daily blog post series](<[https://www.daily.co/blog/custom-video-app-with-daily-react-hooks-part-one/](https://www.daily.co/blog/tag/daily-react-hooks/)>) on using the [Daily React library](https://docs.daily.co/reference/daily-react) to create a custom video calling app.
+> This repository is part of [a Daily blog post series](<[https://www.daily.co/blog/custom-video-app-with-daily-react-hooks-part-one/](https://www.daily.co/blog/tag/daily-react-hooks/)>) on using the [Daily React library](https://docs.daily.co/reference/daily-react) to create a custom video calling app.
+> See the original repo for more info: https://github.com/daily-demos/custom-video-daily-react-hooks
 
-|                                                                                                                                                                                                     |                                                                                                                                |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| ![Prejoin UI](https://lh5.googleusercontent.com/pybG1ZczFSgh_wn5j-LEobidbl1TgjTj9bZxOdj1UbYH5XH-XoBBBH7ZIREx4QD_8LlgSpL-vXNFVlcNPedq2poGFhvNPZhWb5XqWzXwNBpxbzc2JoEwUBwKH4B1U1Y5qgTLDuvrfKvwkwKD5g) | ![in-call UI with multiple participants](https://www.daily.co/blog/content/images/size/w1600/2022/05/end-of-this-post-opt.png) |
-| ![in-call UI with one participant](https://www.daily.co/blog/content/images/size/w1600/2022/05/waiting-for-others-opt.png)                                                                          | ![Active screen share](https://www.daily.co/blog/content/images/size/w1600/2022/05/screenshare-opt.png)                        |
-| ![Chat UI](https://www.daily.co/blog/content/images/2022/06/ss1.png)                                                                                                                                |
+This repo implements local recording via [MediaRecorder](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder). It adds 'Start/Stop recording' buttons that use a <canvas> to composite local video from the participant's camera and screen share into one "scene", passes it to the MediaRecorder API, and then downloads the file locally to your device once you hit 'stop recording'.
 
-## Features
+This is meant to be a starting point to build your local recording implementation, so there are gaps:
+- cloud upload: The example doesn't handle uploading the local recording obtained in the user's device to the cloud. One way of doing is via AWS multipart upload. You could progressively upload the recorded chunks while the recording is happening. You might want to consider adjusting the frequency of chunks being uploaded based on the user's network conditions and it may not be ideal for users with poor network conditions
+- error handling: You might also want to consider other edge cases and better error handling like what happens when the user closes the tab accidentally
+- In this example: screen sharing needs to be started before you hit start recording - The code assumes that screen sharing is started before recording. You might need dynamic behavior (like turning on/off screen sharing while recording), for that you'll need to handle adding/removing tracks via addTrack() from MediaRecorder and listening for the screen share state change
+- Video layout on the canvas - Currently, the two videos are just laid side by side so it's a basic layout. You might want to create a more sophisticated layout depending on your requirements.
+<img width="1919" alt="image" src="https://github.com/daily-solutions/daily-react-local-recording-example/assets/32199592/c0fe3e6c-a867-4687-a528-eb2dc56e03d9">
 
-This app includes:
+- Audio recording - The audio from the local microphone is recorded, but not the audio from the remote participants. If you need to record remote audio, you'll need to capture and mix that audio into the recording
+- Browser and encoder compatibility - The example uses VP9 codec for video encoding, which might not be supported in all browsers or hardware. You could fall back to VP8 if VP9 is not available, but this requires additional checks, I would recommend testing on some other devices as well w
+- Performance - Rendering video ( + screen share track and other remote video tracks) on a canvas and then recording it can be CPU-intensive while also being on a call. In rough tests on a M1 Pro, starting recording increased CPU usage by about 10% but given the wide range of devices your users might be on, you'll want to conduct more testing
 
-- Custom video tiles using Daily's APIs for multi-participant calls
-- A tray for local device management
-- Prejoin UI for device management before joining the call
-- Screen sharing
-- Custom text-based chat while in the call
-- Custom usernames
-- "Waiting for others" card
-
-This is a demo app meant to showcase how to interact with the Daily APIs. It is not optimized for large calls. (Read our [large meetings series](https://www.daily.co/blog/tag/large-meeting-series/) for more information.)
-
-## Tutorial series
-
-Find our full series on how we built this app on the [Daily blog](https://www.daily.co/blog/tag/daily-react-hooks/).
-
-The first post in the series covers how to [build the video components](https://www.daily.co/blog/custom-video-app-with-daily-react-hooks-part-one/). The code in the [v1.0](https://github.com/daily-demos/custom-video-daily-react-hooks/tree/1.0) tag corresponds to this blog post.
-
-The second post in the series covers how to build a [prejoin UI](https://www.daily.co/blog/add-a-prejoin-ui-to-a-custom-video-app-with-the-daily-react-hooks-library-part-2/). The code relevant to this post can be found in the [v2.0](https://github.com/daily-demos/custom-video-daily-react-hooks/tree/v2.0) tag.
-
-The third post in the series covers how to build a [custom chat widget](https://www.daily.co/blog/add-chat-to-your-custom-video-app-with-daily-react-hooks-part-3/). The code relevant to this post can be found in the [v3.0](https://github.com/daily-demos/custom-video-daily-react-hooks/tree/v3.0) tag.
-
-All features mentioned above are available on `main`. Earlier versions exclude later features.
-
-Deployed versions of the demo can be found below:
-
-- main: [main](https://daily-react-hooks.netlify.app/)
-- v1.0: [custom-video-daily-react-hooks-v1](https://custom-video-daily-react-hooks-v1.netlify.app)
-- v2.0: [custom-video-daily-react-hooks-v2](https://custom-video-daily-react-hooks-v2.netlify.app)
-- v3.0: [custom-video-daily-react-hooks-v3](https://custom-video-daily-react-hooks-v3.netlify.app)
-
----
 
 ## Requirements
 
