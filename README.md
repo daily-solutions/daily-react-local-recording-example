@@ -3,7 +3,7 @@
 > This repository is part of [a Daily blog post series](<[https://www.daily.co/blog/custom-video-app-with-daily-react-hooks-part-one/](https://www.daily.co/blog/tag/daily-react-hooks/)>) on using the [Daily React library](https://docs.daily.co/reference/daily-react) to create a custom video calling app.
 > See the original repo for more info: https://github.com/daily-demos/custom-video-daily-react-hooks
 
-This repo implements local recording via [MediaRecorder](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder). It adds 'Start/Stop recording' buttons that use a <canvas> to composite local video from the participant's camera and screen share into one "scene", passes it to the MediaRecorder API, and then downloads the file locally to your device once you hit 'stop recording'.
+This repo implements local recording via [MediaRecorder](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder). It adds 'Start/Stop recording' buttons that use a `<canvas>` to composite the local participant's video, audio, and screen share, passes it to the MediaRecorder API, and then downloads the file locally to your device once you hit 'stop recording'.
 
 This is meant to be a starting point to build your local recording implementation, so there are gaps:
 - cloud upload: The example doesn't handle uploading the local recording obtained in the user's device to the cloud. One way of doing is via AWS multipart upload. You could progressively upload the recorded chunks while the recording is happening. You might want to consider adjusting the frequency of chunks being uploaded based on the user's network conditions and it may not be ideal for users with poor network conditions
